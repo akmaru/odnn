@@ -1,1 +1,1 @@
-# maru-dnnlib
+# odnn: A mini DNN kernel library
