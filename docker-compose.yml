@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  base:
+    image: odnn:base-latest
+    build:
+      context: docker
+      dockerfile: Dockerfile
+      target: base
+
+  dev:
+    image: odnn:dev-${HOST_USERNAME}
+    build:
+      context: docker
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        - UID=${HOST_UID}
+        - GID=${HOST_GID}
+    depends_on:
+      - base
+    user: "${HOST_UID}:${HOST_GID}"
+    network_mode: "host"
+    volumes:
+      - .:/workspaces/odnn
+    working_dir: /workspaces/odnn
+    stdin_open: true
+    tty: true
