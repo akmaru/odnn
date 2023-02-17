@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     curl \
     git \
+    ninja-build \
     wget \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
