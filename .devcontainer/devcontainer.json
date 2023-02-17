@@ -1,0 +1,19 @@
+{
+    "name": "odnn",
+    "dockerComposeFile": [
+        "../docker-compose.yml",
+        "docker-compose.yml"
+    ],
+    "service": "dev",
+    "workspaceFolder": "/workspaces/odnn",
+    "remoteUser": "developer",
+    "extensions": [
+        "ms-azuretools.vscode-docker",
+        "MS-CEINTL.vscode-language-pack-ja",
+        "ms-python.vscode-pylance",
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools",
+        "twxs.cmake",
+        "yzhang.markdown-all-in-one",
+    ]
+}

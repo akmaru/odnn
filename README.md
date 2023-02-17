@@ -1,24 +1,18 @@
 # odnn: A mini DNN kernel library
 
 ## Environment setup
-
 ### Initialize .env
-
 ```sh
 ./docker/init_env.sh
 ```
 
-### Build Docker container
-
+### Build Docker image and attach Docker container
 ```sh
 docker-compose up
-```
-
-### Attach dev container
-
-```sh
 docker-compose run dev
 ```
+
+or, use VSCode devcontainer
 
 ## Build
 
