@@ -10,16 +10,18 @@ ENV PYTHONIOENCODING=utf-8
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
+    clang-format \
     cmake \
     curl \
     git \
     ninja-build \
+    openssh-client \
     wget \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 #
-# fev image
+# dev image
 #
 FROM base AS dev
 
@@ -28,6 +30,7 @@ ENV LANG C.UTF-8
 ENV PYTHONIOENCODING=utf-8
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    less \
     sudo \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
