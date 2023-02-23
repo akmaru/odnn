@@ -39,7 +39,6 @@ FetchContent_MakeAvailable(googletest)
 #
 # Project settings
 #
-
 set(ODNN_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
 set(ODNN_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(ODNN_CXX_FLAGS "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wno-unknown-pragmas")

@@ -6,3 +6,5 @@ add_library(
     ${SRC_SRCS}
     ${SRC_HDRS}
 )
+
+target_include_directories(odnn PRIVATE ${ODNN_INCLUDE_DIRS})
