@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <numeric>
+#include <ranges>
 #include <vector>
 
 #include "array_ref.h"
@@ -12,7 +13,8 @@ namespace odnn {
 class Size {
 public:
   using ElemT = std::int64_t;
-  using NumT = std::size_t;
+  using IndexT = std::size_t;
+  using RefT = ArrayRef<ElemT>;
 
   using iterator = ElemT*;
   using const_iterator = const ElemT*;
@@ -20,20 +22,20 @@ public:
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   Size() : sizes_({}) {}
-  explicit Size(ArrayRef<ElemT> arr) : sizes_(arr.to_vector()) {}
+  Size(RefT arr) : sizes_(arr.to_vector()) {}
 
-  inline ElemT operator[](NumT index) const noexcept { return sizes_[index]; }
+  inline ElemT operator[](IndexT index) const noexcept { return sizes_[index]; }
 
-  inline ElemT at(NumT index) const {
+  inline ElemT at(IndexT index) const {
     CHECK_LT(index, size());
     return this->operator[](index);
   }
 
-  operator ArrayRef<ElemT>() const { return ArrayRef(sizes_); }
+  operator RefT() const { return RefT(sizes_); }
 
-  NumT size() const noexcept { return sizes_.size(); }
+  IndexT size() const noexcept { return sizes_.size(); }
 
-  NumT num_of_elements() const noexcept {
+  IndexT num_of_elements() const noexcept {
     if (sizes_.empty()) {
       return 0;
     }
@@ -59,8 +61,24 @@ public:
   const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
   const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
+  bool inbound(RefT ref) const noexcept {
+    if (ref.size() != size()) {
+      return false;
+    }
+
+    for (auto i : std::views::iota(IndexT(0), size())) {
+      if (ref[i] >= this->operator[](i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 protected:
   std::vector<ElemT> sizes_;
 };
+
+using SizeRef = Size::RefT;
 
 }  // namespace odnn
