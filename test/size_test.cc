@@ -16,6 +16,7 @@ TEST(SizeTest, Basic) {
   EXPECT_EQ(size[2], 224);
   EXPECT_EQ(size[3], 224);
   EXPECT_EQ(size.size(), 4);
+  EXPECT_EQ(size.num_of_elements(), 1 * 3 * 224 * 224);
 }
 
 TEST(SizeTest, Stride) {
