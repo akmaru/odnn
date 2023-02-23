@@ -10,15 +10,20 @@ ENV PYTHONIOENCODING=utf-8
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
-    clang-format \
-    cmake \
     curl \
     git \
+    gnupg \
     ninja-build \
     openssh-client \
     wget \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
+COPY install/install_cmake.sh /install/install_cmake.sh
+RUN bash /install/install_cmake.sh 
+
+COPY install/install_clang.sh /install/install_clang.sh
+RUN bash /install/install_clang.sh 
 
 #
 # dev image
