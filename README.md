@@ -18,7 +18,7 @@ or, use VSCode devcontainer
 
 ```sh
 mkdir -p build && cd build
-cmake -GNinja ../
+cmake -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ../
 cmake --build . --parallel
 ```
 
