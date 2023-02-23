@@ -69,6 +69,8 @@ public:
     return oss.str();
   }
 
+  std::vector<T> to_vector() const { return std::vector<T>(data_, data_ + length_); }
+
 private:
   const T* data_;
   size_type length_;
