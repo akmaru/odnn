@@ -4,6 +4,7 @@
 
 #include <array>
 #include <vector>
+#include <ranges>
 
 namespace odnn {
 namespace {
@@ -12,7 +13,7 @@ using T = int;
 constexpr std::size_t size = 5;
 
 void test_for_by_index(const ArrayRef<T>& ref) {
-  for (auto i = decltype(ref.size())(0); i < ref.size(); ++i) {
+  for (auto i : std::views::iota(0uz, ref.size())) {
     EXPECT_EQ(ref[i], i);
   }
 }
