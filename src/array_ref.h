@@ -5,7 +5,7 @@
 #include <sstream>
 #include <vector>
 
-#include "log.h"
+#include "logging.h"
 
 namespace odnn {
 

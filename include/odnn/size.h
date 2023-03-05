@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "array_ref.h"
-#include "log.h"
+#include "logging.h"
 
 namespace odnn {
 
