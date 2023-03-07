@@ -1,36 +1,48 @@
 #pragma once
 
+#include <odnn/scalar_type.h>
+#include <odnn/size.h>
+#include <odnn/util.h>
+
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <numeric>
+#include <ranges>
 #include <vector>
 
 #include "array_ref.h"
-#include "odnn/scalar_type.h"
-#include "odnn/size.h"
+#include "storage.h"
 
 namespace odnn {
 
 class Tensor {
   using ElemT = ScalarType;
   using DataT = std::uint8_t[];
-  using DataRefT = std::shared_ptr<DataT>;
+  using DataPtrT = std::uint8_t*;
+  using StoragePtrT = std::shared_ptr<Storage>;
 
 public:
-  Tensor() : shape_(), dtype_(ScalarType::kFloat32), data_ref_(nullptr) {}
-  Tensor(const Size& shape, ScalarType dtype = ScalarType::kFloat32)
-      : shape_(shape), dtype_(dtype), data_ref_(zero_data(shape, dtype)) {}
+  Tensor() : dtype_(ScalarType::kFloat32) {}
+  explicit Tensor(const Size& shape, ScalarType dtype = ScalarType::kFloat32)
+      : shape_(shape), dtype_(dtype), storage_(std::make_shared<Storage>()) {
+    const auto bytes = shape.num_of_elements() * byte_of_scalar_type(dtype);
+    storage_->alloc(bytes);
+  }
 
-  Size shape() const noexcept { return shape_; }
+  inline Storage* storage() noexcept { return storage_.get(); }
 
-  ElemT dtype() const noexcept { return dtype_; }
+  inline const Storage* storage() const noexcept { return storage_.get(); }
+
+  inline Size shape() const noexcept { return shape_; }
+
+  inline ElemT dtype() const noexcept { return dtype_; }
 
   template <typename DType>
-  DType& at(Size::IndexT index) {
+  DType& at(SizeT index) {
     CHECK_LE(index, num_of_elements());
-    const auto data = data_ref_.get();
-    return reinterpret_cast<DType*>(data)[index];
+    return storage()->at<DType>(index);
   }
 
   template <typename DType>
@@ -41,10 +53,9 @@ public:
   }
 
   template <typename DType>
-  const DType& at(Size::IndexT index) const {
+  const DType& at(SizeT index) const {
     CHECK_LE(index, num_of_elements());
-    const auto data = data_ref_.get();
-    return reinterpret_cast<DType*>(data)[index];
+    return storage()->at<DType>(index);
   }
 
   template <typename DType>
@@ -54,26 +65,33 @@ public:
     return at<DType>(flatten_index);
   }
 
-  Size::IndexT num_of_elements() const noexcept { return shape_.num_of_elements(); }
+  auto dim(SizeT index) const {
+    CHECK_LE(index, shape().size());
+    return shape()[index];
+  }
 
-  static Tensor zeros(SizeRef shape, ScalarType dtype = ScalarType::kFloat32) { return Tensor(shape, dtype); }
+  SizeT num_of_dims() const noexcept { return shape().size(); }
+
+  SizeT num_of_elements() const noexcept { return shape_.num_of_elements(); }
+
+  static Tensor zeros(SizeRef shape, ScalarType dtype = ScalarType::kFloat32) {
+    auto tensor = Tensor(shape, dtype);
+    tensor.fill_zero();
+    return tensor;
+  }
 
 protected:
   Size shape_;
   ElemT dtype_;
-  DataRefT data_ref_;
+  StoragePtrT storage_;
 
-  Size::IndexT flatten_index_from_indices(SizeRef indices) const {
-    CHECK_EQ(indices.size(), shape_.size());
+  SizeT flatten_index_from_indices(SizeRef indices) const {
+    CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.size());
 
-    return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), 0);
+    return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
   }
 
-  static DataRefT zero_data(const Size& shape, ScalarType dtype) {
-    const auto byte = shape.num_of_elements() * byte_of_scalar_type(dtype);
-    DataRefT data_ref(new std::uint8_t[byte]);
-    return data_ref;
-  }
+  void fill_zero() { storage_->fill_zero<float>(); }
 };
 
 }  // namespace odnn

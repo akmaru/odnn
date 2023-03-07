@@ -1,8 +1,12 @@
 #pragma once
 
+#include <odnn/util.h>
+
 #include <cstdint>
 #include <numeric>
 #include <ranges>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "array_ref.h"
@@ -12,30 +16,29 @@ namespace odnn {
 
 class Size {
 public:
-  using ElemT = std::int64_t;
-  using IndexT = std::size_t;
-  using RefT = ArrayRef<ElemT>;
+  using RefT = ArrayRef<SizeT>;
 
-  using iterator = ElemT*;
-  using const_iterator = const ElemT*;
+  using iterator = SizeT*;
+  using const_iterator = const SizeT*;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   Size() : sizes_({}) {}
   Size(RefT arr) : sizes_(arr.to_vector()) {}
 
-  inline ElemT operator[](IndexT index) const noexcept { return sizes_[index]; }
+  inline SizeT operator[](SizeT index) const noexcept { return sizes_[index]; }
 
-  inline ElemT at(IndexT index) const {
+  inline SizeT at(SizeT index) const {
     CHECK_LT(index, size());
     return this->operator[](index);
   }
 
+  // NOLINTNEXTLINE(google-explicit-constructor)
   operator RefT() const { return RefT(sizes_); }
 
-  IndexT size() const noexcept { return sizes_.size(); }
+  SizeT size() const noexcept { return static_cast<SizeT>(sizes_.size()); }
 
-  IndexT num_of_elements() const noexcept {
+  SizeT num_of_elements() const noexcept {
     if (sizes_.empty()) {
       return 0;
     }
@@ -61,12 +64,28 @@ public:
   const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
   const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
+  std::string to_string() const {
+    std::ostringstream oss;
+    oss << "(";
+    std::size_t i = 0;
+
+    for (const auto& v : sizes_) {
+      if (i++ > 0) {
+        oss << ", ";
+      }
+      oss << v;
+    }
+
+    oss << ")";
+    return oss.str();
+  }
+
   bool inbound(RefT ref) const noexcept {
-    if (ref.size() != size()) {
+    if (static_cast<SizeT>(ref.size()) != size()) {
       return false;
     }
 
-    for (auto i : std::views::iota(IndexT(0), size())) {
+    for (auto i : std::views::iota(static_cast<SizeT>(0), size())) {
       if (ref[i] >= this->operator[](i)) {
         return false;
       }
@@ -76,8 +95,13 @@ public:
   }
 
 protected:
-  std::vector<ElemT> sizes_;
+  std::vector<SizeT> sizes_;
 };
+
+std::ostream& operator<<(std::ostream& out, const Size& size) {
+  out << size.to_string();
+  return out;
+}
 
 using SizeRef = Size::RefT;
 
