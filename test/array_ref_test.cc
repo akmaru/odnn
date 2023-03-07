@@ -3,8 +3,8 @@
 #include <gtest/gtest.h>
 
 #include <array>
-#include <vector>
 #include <ranges>
+#include <vector>
 
 namespace odnn {
 namespace {

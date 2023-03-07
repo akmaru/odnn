@@ -24,6 +24,7 @@ public:
 
   explicit ArrayRef(const T& one_elem) : data_(&one_elem), length_(1) {}
 
+  // NOLINTBEGIN(google-explicit-constructor)
   template <std::size_t N>
   ArrayRef(const std::array<T, N>& arr) : data_(arr.data()), length_(N) {}
 
@@ -31,9 +32,10 @@ public:
 
   ArrayRef(const std::initializer_list<T>& init)
       : data_(std::begin(init) == std::end(init) ? nullptr : std::begin(init)), length_(init.size()) {}
-
-  inline const T* data() const { return data_; }
-  inline size_type size() const { return length_; }
+  // NOLINTEND(google-explicit-constructor)
+ 
+  inline const T* data() const noexcept { return data_; }
+  inline size_type size() const noexcept { return length_; }
 
   iterator begin() const { return data(); }
   iterator end() const { return data() + size(); }
