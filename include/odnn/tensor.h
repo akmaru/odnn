@@ -41,14 +41,21 @@ public:
 
   Size shape() const noexcept { return shape_; }
 
+  bool inbound(SizeRef indices) const noexcept { return shape().inbound(indices); }
+
+  SizeT flatten_index(SizeRef indices) const {
+    CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.ndim());
+    return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
+  }
+
   DType& at(SizeRef indices) {
-    CHECK(shape().inbound(indices));
+    CHECK(inbound(indices));
     const auto fi = flatten_index(indices);
     return storage()->operator[](fi);
   }
 
   const DType& at(SizeRef indices) const {
-    CHECK(shape().inbound(indices));
+    CHECK(inbound(indices));
     const auto fi = flatten_index(indices);
     return storage()->operator[](fi);
   }
@@ -82,12 +89,6 @@ public:
 protected:
   Size shape_;
   StoragePtrT storage_;
-
-  SizeT flatten_index(SizeRef indices) const {
-    CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.ndim());
-
-    return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
-  }
 
   void fill_zero() { storage().fill_zero(); }
 };

@@ -30,10 +30,10 @@ TEST(SizeTest, Stride) {
   const Size size({1, 3, 224, 224});
   const auto strides = size.strides();
 
-  EXPECT_EQ(strides[0], 1 * 3 * 224 * 224);
-  EXPECT_EQ(strides[1], 3 * 224 * 224);
-  EXPECT_EQ(strides[2], 224 * 224);
-  EXPECT_EQ(strides[3], 224);
+  EXPECT_EQ(strides[0], size[1] * size[2] * size[3]);
+  EXPECT_EQ(strides[1], size[2] * size[3]);
+  EXPECT_EQ(strides[2], size[3]);
+  EXPECT_EQ(strides[3], 1);
   EXPECT_EQ(strides.ndim(), 4);
 }
 

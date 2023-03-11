@@ -26,11 +26,14 @@ public:
   Size() : sizes_({}) {}
   Size(RefT arr) : sizes_(arr.to_vector()) {}
 
-  inline SizeT operator[](SizeT index) const noexcept { return sizes_[index]; }
-
-  inline SizeT at(SizeT index) const {
+  SizeT& operator[](SizeT index) {
     CHECK_LT(index, ndim());
-    return this->operator[](index);
+    return sizes_[index];
+  }
+
+  const SizeT& operator[](SizeT index) const {
+    CHECK_LT(index, ndim());
+    return sizes_[index];
   }
 
   // NOLINTNEXTLINE(google-explicit-constructor)
@@ -48,7 +51,15 @@ public:
 
   Size strides() const noexcept {
     auto strides = *this;
-    std::inclusive_scan(this->crbegin(), this->crend(), strides.rbegin(), std::multiplies<>(), 1);
+
+    if (ndim() > 0) {
+      strides[ndim() - 1] = 1;
+    }
+
+    if (ndim() > 1) {
+      std::inclusive_scan(this->crbegin(), this->crend() - 1, strides.rbegin() + 1, std::multiplies<>(), 1);
+    }
+
     return strides;
   }
 
@@ -97,11 +108,6 @@ public:
 protected:
   std::vector<SizeT> sizes_;
 };
-
-std::ostream& operator<<(std::ostream& out, const Size& size) {
-  out << size.to_string();
-  return out;
-}
 
 using SizeRef = Size::RefT;
 
