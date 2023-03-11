@@ -19,10 +19,15 @@ namespace odnn {
 
 template <typename DType>
 class Tensor {
+public:
   using StorageT = Storage<DType>;
   using StoragePtrT = std::shared_ptr<StorageT>;
 
-public:
+  using iterator = DType*;
+  using const_iterator = const DType*;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
   Tensor() = default;
 
   explicit Tensor(const Size& shape) : shape_(shape), storage_(std::make_shared<StorageT>()) {
@@ -49,13 +54,25 @@ public:
   }
 
   auto dim(SizeT index) const {
-    CHECK_LE(index, shape().size());
+    CHECK_LE(index, shape().ndim());
     return shape()[index];
   }
 
-  SizeT num_of_dims() const noexcept { return shape().size(); }
+  SizeT ndim() const noexcept { return shape().ndim(); }
 
   SizeT num_of_elements() const noexcept { return shape_.num_of_elements(); }
+
+  iterator begin() noexcept { return storage()->begin(); }
+  iterator end() noexcept { return storage()->end(); }
+
+  const_iterator cbegin() const noexcept { return storage()->cbegin(); }
+  const_iterator cend() const noexcept { return storage()->cend(); }
+
+  reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
+  reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+
+  const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
+  const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
   static Tensor zeros(SizeRef shape) {
     auto tensor = Tensor<DType>(shape);
@@ -67,7 +84,7 @@ protected:
   StoragePtrT storage_;
 
   SizeT flatten_index(SizeRef indices) const {
-    CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.size());
+    CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.ndim());
 
     return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
   }

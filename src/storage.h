@@ -15,6 +15,11 @@ class Storage {
 public:
   using DataT = std::unique_ptr<DType[]>;
 
+  using iterator = DType*;
+  using const_iterator = const DType*;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
   Storage() : data_(nullptr), size_(0) {}
 
   explicit Storage(SizeT size) { calloc(size); }
@@ -36,6 +41,18 @@ public:
     CHECK_LE(index, size());
     return data()[index];
   }
+
+  iterator begin() noexcept { return data(); }
+  iterator end() noexcept { return data() + size(); }
+
+  const_iterator cbegin() const noexcept { return data(); }
+  const_iterator cend() const noexcept { return data() + size(); }
+
+  reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
+  reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
+
+  const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
+  const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
   void realloc(SizeT size) {
     data_ = alloc(size);

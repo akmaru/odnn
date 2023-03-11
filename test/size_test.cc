@@ -15,7 +15,7 @@ TEST(SizeTest, Basic) {
   EXPECT_EQ(size[1], 3);
   EXPECT_EQ(size[2], 224);
   EXPECT_EQ(size[3], 224);
-  EXPECT_EQ(size.size(), 4);
+  EXPECT_EQ(size.ndim(), 4);
   EXPECT_EQ(size.num_of_elements(), 1 * 3 * 224 * 224);
 
   EXPECT_TRUE(size.inbound({0, 0, 0, 0}));
@@ -34,7 +34,7 @@ TEST(SizeTest, Stride) {
   EXPECT_EQ(strides[1], 3 * 224 * 224);
   EXPECT_EQ(strides[2], 224 * 224);
   EXPECT_EQ(strides[3], 224);
-  EXPECT_EQ(strides.size(), 4);
+  EXPECT_EQ(strides.ndim(), 4);
 }
 
 }  // namespace

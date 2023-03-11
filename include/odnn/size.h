@@ -29,14 +29,14 @@ public:
   inline SizeT operator[](SizeT index) const noexcept { return sizes_[index]; }
 
   inline SizeT at(SizeT index) const {
-    CHECK_LT(index, size());
+    CHECK_LT(index, ndim());
     return this->operator[](index);
   }
 
   // NOLINTNEXTLINE(google-explicit-constructor)
   operator RefT() const { return RefT(sizes_); }
 
-  SizeT size() const noexcept { return static_cast<SizeT>(sizes_.size()); }
+  SizeT ndim() const noexcept { return static_cast<SizeT>(sizes_.size()); }
 
   SizeT num_of_elements() const noexcept {
     if (sizes_.empty()) {
@@ -53,10 +53,10 @@ public:
   }
 
   iterator begin() noexcept { return sizes_.data(); }
-  iterator end() noexcept { return sizes_.data() + size(); }
+  iterator end() noexcept { return sizes_.data() + sizes_.size(); }
 
   const_iterator cbegin() const noexcept { return sizes_.data(); }
-  const_iterator cend() const noexcept { return sizes_.data() + size(); }
+  const_iterator cend() const noexcept { return sizes_.data() + sizes_.size(); }
 
   reverse_iterator rbegin() noexcept { return reverse_iterator(end()); }
   reverse_iterator rend() noexcept { return reverse_iterator(begin()); }
@@ -81,11 +81,11 @@ public:
   }
 
   bool inbound(RefT ref) const noexcept {
-    if (static_cast<SizeT>(ref.size()) != size()) {
+    if (static_cast<SizeT>(ref.size()) != ndim()) {
       return false;
     }
 
-    for (auto i : std::views::iota(static_cast<SizeT>(0), size())) {
+    for (auto i : std::ranges::views::iota(0, ndim())) {
       if (ref[i] >= this->operator[](i)) {
         return false;
       }
