@@ -17,52 +17,35 @@
 
 namespace odnn {
 
+template <typename DType>
 class Tensor {
-  using ElemT = ScalarType;
-  using DataT = std::uint8_t[];
-  using DataPtrT = std::uint8_t*;
-  using StoragePtrT = std::shared_ptr<Storage>;
+  using StorageT = Storage<DType>;
+  using StoragePtrT = std::shared_ptr<StorageT>;
 
 public:
-  Tensor() : dtype_(ScalarType::kFloat32) {}
-  explicit Tensor(const Size& shape, ScalarType dtype = ScalarType::kFloat32)
-      : shape_(shape), dtype_(dtype), storage_(std::make_shared<Storage>()) {
-    const auto bytes = shape.num_of_elements() * byte_of_scalar_type(dtype);
-    storage_->alloc(bytes);
+  Tensor() = default;
+
+  explicit Tensor(const Size& shape) : shape_(shape), storage_(std::make_shared<StorageT>()) {
+    const auto size = shape.num_of_elements();
+    storage_->calloc(size);
   }
 
-  inline Storage* storage() noexcept { return storage_.get(); }
+  StorageT* storage() noexcept { return storage_.get(); }
 
-  inline const Storage* storage() const noexcept { return storage_.get(); }
+  const StorageT* storage() const noexcept { return storage_.get(); }
 
-  inline Size shape() const noexcept { return shape_; }
+  Size shape() const noexcept { return shape_; }
 
-  inline ElemT dtype() const noexcept { return dtype_; }
-
-  template <typename DType>
-  DType& at(SizeT index) {
-    CHECK_LE(index, num_of_elements());
-    return storage()->at<DType>(index);
-  }
-
-  template <typename DType>
   DType& at(SizeRef indices) {
     CHECK(shape().inbound(indices));
-    const auto flatten_index = flatten_index_from_indices(indices);
-    return at<DType>(flatten_index);
+    const auto fi = flatten_index(indices);
+    return storage()->operator[](fi);
   }
 
-  template <typename DType>
-  const DType& at(SizeT index) const {
-    CHECK_LE(index, num_of_elements());
-    return storage()->at<DType>(index);
-  }
-
-  template <typename DType>
   const DType& at(SizeRef indices) const {
     CHECK(shape().inbound(indices));
-    const auto flatten_index = flatten_index_from_indices(indices);
-    return at<DType>(flatten_index);
+    const auto fi = flatten_index(indices);
+    return storage()->operator[](fi);
   }
 
   auto dim(SizeT index) const {
@@ -74,24 +57,22 @@ public:
 
   SizeT num_of_elements() const noexcept { return shape_.num_of_elements(); }
 
-  static Tensor zeros(SizeRef shape, ScalarType dtype = ScalarType::kFloat32) {
-    auto tensor = Tensor(shape, dtype);
-    tensor.fill_zero();
+  static Tensor zeros(SizeRef shape) {
+    auto tensor = Tensor<DType>(shape);
     return tensor;
   }
 
 protected:
   Size shape_;
-  ElemT dtype_;
   StoragePtrT storage_;
 
-  SizeT flatten_index_from_indices(SizeRef indices) const {
+  SizeT flatten_index(SizeRef indices) const {
     CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.size());
 
     return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
   }
 
-  void fill_zero() { storage_->fill_zero<float>(); }
+  void fill_zero() { storage().fill_zero(); }
 };
 
 }  // namespace odnn

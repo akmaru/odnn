@@ -10,71 +10,51 @@
 
 namespace odnn {
 
+template <typename DType>
 class Storage {
 public:
-  using DataPtrT = std::uint8_t[];
-  using DataT = std::unique_ptr<DataPtrT>;
+  using DataT = std::unique_ptr<DType[]>;
 
-  Storage() : data_(nullptr), bytes_(0) {}
+  Storage() : data_(nullptr), size_(0) {}
 
-  explicit Storage(SizeT bytes) : bytes_(bytes) { alloc(); }
+  explicit Storage(SizeT size) { calloc(size); }
 
-  void* data() { return void_data_ptr(); }
+  DType* data() noexcept { return data_.get(); }
 
-  void* data() const { return void_data_ptr(); }
+  const DType* data() const noexcept { return data_.get(); }
 
-  SizeT bytes() const { return bytes_; }
+  auto size() const noexcept { return size_; }
 
-  template <typename T>
-  T& at(SizeT index) {
-    CHECK_LE(index, typed_size<T>());
-    return typed_data<T>()[index];
+  auto bytes() const noexcept { return size() * sizeof(DType); }
+
+  DType& operator[](SizeT index) {
+    CHECK_LE(index, size());
+    return data()[index];
   }
 
-  template <typename T>
-  const T& at(SizeT index) const {
-    CHECK_LE(index, typed_size<T>());
-    return typed_data<T>()[index];
+  const DType& operator[](SizeT index) const {
+    CHECK_LE(index, size());
+    return data()[index];
   }
 
-  void alloc() { data_ = std::make_unique<DataPtrT>(bytes_); }
-
-  void alloc(SizeT bytes) {
-    bytes_ = bytes;
-    alloc();
+  void realloc(SizeT size) {
+    data_ = alloc(size);
+    size_ = size;
   }
 
-  template <typename T>
-  void fill_zero() {
-    std::fill(typed_data<T>(), typed_data<T>() + typed_size<T>(), static_cast<T>(0));
-  }
+  void fill_zero() { std::fill(data(), data() + size(), static_cast<DType>(0)); }
 
-  template <typename T>
-  void calloc() {
-    alloc();
-    fill_zero<T>();
+  void calloc(SizeT size) {
+    data_ = alloc(size);
+    size_ = size;
+    fill_zero();
   }
 
 protected:
   DataT data_;
-  SizeT bytes_;
+  SizeT size_;
 
-  void* void_data_ptr() const { return reinterpret_cast<void*>(data_.get()); }
-
-  template <typename T>
-  T* typed_data() noexcept {
-    return reinterpret_cast<T*>(data());
-  }
-
-  template <typename T>
-  const T* typed_data() const noexcept {
-    return reinterpret_cast<T*>(data());
-  }
-
-  template <typename T>
-  SizeT typed_size() const noexcept {
-    return bytes() / sizeof(T);
-  }
+  DataT alloc(SizeT size) { return std::make_unique<DType[]>(size); }
 };
 
 }  // namespace odnn
