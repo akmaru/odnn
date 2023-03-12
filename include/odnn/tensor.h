@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "array_ref.h"
+#include "random.h"
 #include "storage.h"
 
 namespace odnn {
@@ -83,6 +84,12 @@ public:
 
   static Tensor zeros(SizeRef shape) {
     auto tensor = Tensor<DType>(shape);
+    return tensor;
+  }
+
+  static Tensor random(SizeRef shape) {
+    auto tensor = Tensor<DType>(shape);
+    std::for_each(tensor.begin(), tensor.end(), [](auto& v) mutable { v = random_value<DType>(); });
     return tensor;
   }
 
