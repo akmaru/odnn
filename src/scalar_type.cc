@@ -1,7 +1,7 @@
 #include <odnn/scalar_type.h>
 #include <odnn/util.h>
 
-#include "error.h"
+#include "logging.h"
 
 namespace odnn {
 

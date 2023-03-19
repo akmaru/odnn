@@ -4,7 +4,7 @@
 #include <random>
 #include <type_traits>
 
-#include "error.h"
+#include "logging.h"
 #include "singleton.h"
 
 namespace odnn {

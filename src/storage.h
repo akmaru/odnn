@@ -7,7 +7,7 @@
 #include <memory>
 #include <ranges>
 
-#include "error.h"
+#include "logging.h"
 
 namespace odnn {
 

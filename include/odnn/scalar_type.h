@@ -4,7 +4,7 @@
 
 #include <cstddef>
 
-#include "error.h"
+#include "logging.h"
 
 namespace odnn {
 
