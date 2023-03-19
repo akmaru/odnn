@@ -1,10 +1,9 @@
 #pragma once
 
+#include <glog/logging.h>
 #include <odnn/util.h>
 
 #include <cstddef>
-
-#include "logging.h"
 
 namespace odnn {
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glog/logging.h>
 #include <odnn/util.h>
 
 #include <cstdint>
@@ -10,7 +11,6 @@
 #include <vector>
 
 #include "array_ref.h"
-#include "logging.h"
 
 namespace odnn {
 

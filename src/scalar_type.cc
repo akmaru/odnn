@@ -1,7 +1,8 @@
+#include <glog/logging.h>
 #include <odnn/scalar_type.h>
 #include <odnn/util.h>
 
-#include "logging.h"
+#include "error.h"
 
 namespace odnn {
 

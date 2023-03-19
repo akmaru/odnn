@@ -1,13 +1,12 @@
 #pragma once
 
+#include <glog/logging.h>
 #include <odnn/util.h>
 
 #include <algorithm>
 #include <cstdint>
 #include <memory>
 #include <ranges>
-
-#include "logging.h"
 
 namespace odnn {
 

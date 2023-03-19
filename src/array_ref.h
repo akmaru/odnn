@@ -1,11 +1,11 @@
 #pragma once
 
+#include <glog/logging.h>
+
 #include <array>
 #include <cstddef>
 #include <sstream>
 #include <vector>
-
-#include "logging.h"
 
 namespace odnn {
 

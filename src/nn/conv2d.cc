@@ -1,8 +1,9 @@
 #include "odnn/nn/conv2d.h"
 
+#include <glog/logging.h>
+
 #include <iostream>
 
-#include "logging.h"
 #include "odnn/tensor.h"
 
 namespace odnn {

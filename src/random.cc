@@ -1,10 +1,11 @@
+#include <glog/logging.h>
 #include <odnn/random.h>
 
 #include <atomic>
 #include <random>
 #include <type_traits>
 
-#include "logging.h"
+#include "error.h"
 #include "singleton.h"
 
 namespace odnn {

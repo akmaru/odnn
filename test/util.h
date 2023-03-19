@@ -1,12 +1,11 @@
 #pragma once
 
+#include <glog/logging.h>
 #include <odnn/tensor.h>
 #include <torch/torch.h>
 
 #include <algorithm>
 #include <ranges>
-
-#include "logging.h"
 
 namespace odnn {
 namespace testing {

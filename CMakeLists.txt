@@ -42,18 +42,6 @@ endif()
 #
 include(FetchContent)
 
-# googletest
-include(${PROJECT_SOURCE_DIR}/cmake/modules/GoogleTest.cmake)
-
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.13.0.tar.gz)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt
-    ON
-    CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
 #
 # Project settings
 #

@@ -1,5 +1,6 @@
 #include "odnn/size.h"
 
+#include <glog/logging.h>
 #include <gtest/gtest.h>
 
 #include <array>

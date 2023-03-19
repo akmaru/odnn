@@ -1,8 +1,8 @@
 #include "singleton.h"
 
-#include <mutex>
+#include <glog/logging.h>
 
-#include "logging.h"
+#include <mutex>
 
 namespace odnn {
 
