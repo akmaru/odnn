@@ -37,9 +37,6 @@ TEST(Conv2dTest, Float) {
   auto golden_bias = testing::to_torch_tensor(bias);
   auto golden_y = F::detail::conv2d(golden_x, golden_weight, golden_bias, 1, 1, 1, 1);
 
-  std::cout << y.shape().to_string() << std::endl;
-  std::cout << golden_y.sizes() << std::endl;
-
   testing::verify(y, golden_y);
 }
 
