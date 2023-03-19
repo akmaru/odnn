@@ -45,15 +45,19 @@ Tensor<DType> conv2d(
                 const Size i_indices({b, ic, iy, ix});
                 const Size w_indices({oc, ic, ky, kx});
 
-                // TODO(akmaru): support padding
-                if (input.inbound(i_indices)) {
-                  sum += input.at(i_indices) * weight.at(w_indices);
-                }
+                // zero paddiong
+                // TODO[(akmaru): Support more padding
+                const auto iv = input.inbound(i_indices) ? input.at(i_indices) : 0;
+                DVLOG(2) << "  (I" << i_indices.to_string() << " = " << iv << ") x ("
+                         << "W" << w_indices.to_string() << " = " << weight.at(w_indices) << ")";
+
+                sum += iv * weight.at(w_indices);
               }
             }
           }
           const Size o_indices({b, oc, oy, ox});
           output.at(o_indices) = sum + bias.at({oc});
+          DVLOG(2) << "Output" << o_indices.to_string() << " := " << output.at(o_indices);
         }
       }
     }
