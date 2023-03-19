@@ -40,13 +40,15 @@ public:
 
   const StorageT* storage() const noexcept { return storage_.get(); }
 
-  Size shape() const noexcept { return shape_; }
+  const Size& shape() const noexcept { return shape_; }
 
   bool inbound(SizeRef indices) const noexcept { return shape().inbound(indices); }
 
   SizeT flatten_index(SizeRef indices) const {
     CHECK_EQ(static_cast<SizeT>(indices.size()), shape_.ndim());
-    return std::inner_product(indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0));
+    return std::inner_product(
+        indices.begin(), indices.end(), shape_.strides().begin(), static_cast<SizeT>(0)
+    );
   }
 
   DType& at(SizeRef indices) {
@@ -87,9 +89,21 @@ public:
     return tensor;
   }
 
+  static Tensor filled(SizeRef shape, DType value) {
+    auto tensor = Tensor<DType>(shape);
+    tensor.storage()->fill(value);
+    return tensor;
+  }
+
   static Tensor random(SizeRef shape) {
     auto tensor = Tensor<DType>(shape);
     std::for_each(tensor.begin(), tensor.end(), [](auto& v) mutable { v = random_value<DType>(); });
+    return tensor;
+  }
+
+  static Tensor sequence(SizeRef shape) {
+    auto tensor = Tensor<DType>(shape);
+    tensor.storage()->fill_sequence();
     return tensor;
   }
 

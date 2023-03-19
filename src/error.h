@@ -7,7 +7,9 @@ namespace odnn {
 
 class FailMessageStream {
 public:
-  FailMessageStream(const std::string msg, const char* func, const char* file, int line, bool is_check = true);
+  FailMessageStream(
+      const std::string msg, const char* func, const char* file, int line, bool is_check = true
+  );
 
   ~FailMessageStream();
 
@@ -30,6 +32,7 @@ private:
 
 #define UNIMPLENTED() odnn::FailMessageStream("Not implemented", __func__, __FILE__, __LINE__)
 
-#define UNREACHABLE() odnn::FailMessageStream("Entered unreachable code", __func__, __FILE__, __LINE__)
+#define UNREACHABLE() \
+  odnn::FailMessageStream("Entered unreachable code", __func__, __FILE__, __LINE__)
 
 }  // namespace odnn

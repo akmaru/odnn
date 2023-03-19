@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <ranges>
 
 #include "error.h"
 
@@ -59,7 +60,16 @@ public:
     size_ = size;
   }
 
-  void fill_zero() { std::fill(data(), data() + size(), static_cast<DType>(0)); }
+  void fill(DType value) { std::fill(begin(), end(), static_cast<DType>(value)); }
+
+  void fill_zero() { fill(static_cast<DType>(0)); }
+
+  void fill_sequence() {
+    const auto index_range = std::ranges::iota_view(0, size());
+    std::ranges::for_each(index_range, [&](auto i) mutable {
+      this->operator[](i) = static_cast<DType>(i);
+    });
+  }
 
   void calloc(SizeT size) {
     data_ = alloc(size);

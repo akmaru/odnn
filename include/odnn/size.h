@@ -57,7 +57,9 @@ public:
     }
 
     if (ndim() > 1) {
-      std::inclusive_scan(this->crbegin(), this->crend() - 1, strides.rbegin() + 1, std::multiplies<>(), 1);
+      std::inclusive_scan(
+          this->crbegin(), this->crend() - 1, strides.rbegin() + 1, std::multiplies<>(), 1
+      );
     }
 
     return strides;
@@ -97,7 +99,7 @@ public:
     }
 
     for (auto i : std::ranges::views::iota(0, ndim())) {
-      if (ref[i] >= this->operator[](i)) {
+      if (ref[i] < 0 || ref[i] >= this->operator[](i)) {
         return false;
       }
     }

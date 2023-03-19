@@ -31,9 +31,10 @@ public:
   ArrayRef(const std::vector<T>& vec) : data_(vec.data()), length_(vec.size()) {}
 
   ArrayRef(const std::initializer_list<T>& init)
-      : data_(std::begin(init) == std::end(init) ? nullptr : std::begin(init)), length_(init.size()) {}
+      : data_(std::begin(init) == std::end(init) ? nullptr : std::begin(init)),
+        length_(init.size()) {}
   // NOLINTEND(google-explicit-constructor)
- 
+
   inline const T* data() const noexcept { return data_; }
   inline size_type size() const noexcept { return length_; }
 

@@ -9,7 +9,9 @@ namespace odnn {
 namespace nn {
 
 template <typename DType>
-Tensor<DType> conv2d(const Tensor<DType>& input, const Tensor<DType>& weight, const Tensor<DType>& bias) {
+Tensor<DType> conv2d(
+    const Tensor<DType>& input, const Tensor<DType>& weight, const Tensor<DType>& bias
+) {
   CHECK_EQ(input.ndim(), 4);
   CHECK_EQ(weight.ndim(), 4);
   CHECK_EQ(bias.ndim(), 1);
@@ -59,7 +61,8 @@ Tensor<DType> conv2d(const Tensor<DType>& input, const Tensor<DType>& weight, co
   return output;
 }
 
-template Tensor<float> conv2d<float>(const Tensor<float>&, const Tensor<float>&, const Tensor<float>&);
+template Tensor<float>
+conv2d<float>(const Tensor<float>&, const Tensor<float>&, const Tensor<float>&);
 
 }  // namespace nn
 
