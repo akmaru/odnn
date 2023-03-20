@@ -22,9 +22,9 @@ TEST(Conv2dTest, Float) {
   const SizeT height = 4;
   const SizeT kernel_size = 3;
 
-  const auto input_shape = Size({batch, input_channel, height, width});
-  const auto weight_shape = Size({output_channel, input_channel, kernel_size, kernel_size});
-  const auto bias_shape = Size({output_channel});
+  const Size input_shape = {batch, input_channel, height, width};
+  const Size weight_shape = {output_channel, input_channel, kernel_size, kernel_size};
+  const Size bias_shape = {output_channel};
 
   auto x = Tensor<DType>::random(input_shape);
   auto weight = Tensor<DType>::random(weight_shape);

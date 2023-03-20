@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <memory>
 #include <numeric>
 #include <ranges>
@@ -51,16 +52,22 @@ public:
     );
   }
 
-  DType& at(SizeRef indices) {
+  DType& operator[](SizeRef indices) {
     CHECK(inbound(indices));
     const auto fi = flatten_index(indices);
     return storage()->operator[](fi);
   }
 
-  const DType& at(SizeRef indices) const {
+  DType& operator[](std::initializer_list<SizeT> indices) { return operator[](SizeRef(indices)); }
+
+  const DType& operator[](SizeRef indices) const {
     CHECK(inbound(indices));
     const auto fi = flatten_index(indices);
     return storage()->operator[](fi);
+  }
+
+  const DType& operator[](std::initializer_list<SizeT> indices) const {
+    return operator[](SizeRef(indices));
   }
 
   auto dim(SizeT index) const {
@@ -83,6 +90,8 @@ public:
 
   const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
   const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); }
+
+  Tensor select(SizeT dim, SizeT index) {}
 
   static Tensor zeros(SizeRef shape) {
     auto tensor = Tensor<DType>(shape);

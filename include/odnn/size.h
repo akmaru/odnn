@@ -4,6 +4,7 @@
 #include <odnn/util.h>
 
 #include <cstdint>
+#include <initializer_list>
 #include <numeric>
 #include <ranges>
 #include <sstream>
@@ -25,6 +26,7 @@ public:
 
   Size() : sizes_({}) {}
   Size(RefT arr) : sizes_(arr.to_vector()) {}
+  Size(const std::initializer_list<SizeT>& init) : sizes_(init.begin(), init.end()) {}
 
   SizeT& operator[](SizeT index) {
     CHECK_LT(index, ndim());

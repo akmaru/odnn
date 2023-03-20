@@ -42,22 +42,22 @@ Tensor<DType> conv2d(
               for (auto kx = decltype(kernel_width)(0); kx < kernel_width; ++kx) {
                 const auto ix = ox + kx - kernel_width / 2;
                 const auto iy = oy + ky - kernel_height / 2;
-                const Size i_indices({b, ic, iy, ix});
-                const Size w_indices({oc, ic, ky, kx});
+                const Size i_indices = {b, ic, iy, ix};
+                const Size w_indices = {oc, ic, ky, kx};
 
                 // zero paddiong
-                // TODO[(akmaru): Support more padding
-                const auto iv = input.inbound(i_indices) ? input.at(i_indices) : 0;
+                // TODO(akmaru): Support more padding
+                const auto iv = input.inbound(i_indices) ? input[i_indices] : 0;
                 DVLOG(2) << "  (I" << i_indices.to_string() << " = " << iv << ") x ("
-                         << "W" << w_indices.to_string() << " = " << weight.at(w_indices) << ")";
+                         << "W" << w_indices.to_string() << " = " << weight[w_indices] << ")";
 
-                sum += iv * weight.at(w_indices);
+                sum += iv * weight[w_indices];
               }
             }
           }
           const Size o_indices({b, oc, oy, ox});
-          output.at(o_indices) = sum + bias.at({oc});
-          DVLOG(2) << "Output" << o_indices.to_string() << " := " << output.at(o_indices);
+          output[o_indices] = sum + bias[{oc}];
+          DVLOG(2) << "Output" << o_indices.to_string() << " := " << output[o_indices];
         }
       }
     }
