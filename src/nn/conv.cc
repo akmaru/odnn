@@ -1,4 +1,4 @@
-#include "odnn/nn/conv2d.h"
+#include "odnn/nn/conv.h"
 
 #include <glog/logging.h>
 

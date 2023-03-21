@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <odnn/nn/conv2d.h>
+#include <odnn/nn/conv.h>
 #include <torch/nn/options/conv.h>
 #include <torch/torch.h>
 
@@ -21,6 +21,7 @@ TEST(Conv2dTest, Float) {
   const SizeT width = 4;
   const SizeT height = 4;
   const SizeT kernel_size = 3;
+  const auto padding = kernel_size / 2;
 
   const Size input_shape = {batch, input_channel, height, width};
   const Size weight_shape = {output_channel, input_channel, kernel_size, kernel_size};
@@ -35,7 +36,8 @@ TEST(Conv2dTest, Float) {
   auto golden_x = testing::to_torch_tensor(x);
   auto golden_weight = testing::to_torch_tensor(weight);
   auto golden_bias = testing::to_torch_tensor(bias);
-  auto golden_y = F::detail::conv2d(golden_x, golden_weight, golden_bias, 1, 1, 1, 1);
+  auto golden_y =
+      F::conv2d(golden_x, golden_weight, F::Conv2dFuncOptions().bias(golden_bias).padding(padding));
 
   testing::verify(y, golden_y);
 }

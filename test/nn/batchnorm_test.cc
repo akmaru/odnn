@@ -15,8 +15,6 @@ namespace {
 namespace F = torch::nn::functional;
 
 TEST(BatchNorm2dTest, Float) {
-  google::InstallFailureSignalHandler();
-
   using DType = float;
 
   const SizeT batch = 1;
