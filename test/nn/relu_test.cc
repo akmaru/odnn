@@ -3,8 +3,6 @@
 #include <gtest/gtest.h>
 #include <odnn/tensor.h>
 #include <torch/nn/functional/activation.h>
-#include <torch/nn/functional/batchnorm.h>
-#include <torch/nn/options/batchnorm.h>
 #include <torch/torch.h>
 
 #include "../util.h"

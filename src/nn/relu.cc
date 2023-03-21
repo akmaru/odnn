@@ -1,9 +1,10 @@
+#include "odnn/nn/relu.h"
+
 #include <glog/logging.h>
 
 #include <cmath>
 #include <ranges>
 
-#include "odnn/nn/batchnorm.h"
 #include "odnn/tensor.h"
 
 namespace odnn {

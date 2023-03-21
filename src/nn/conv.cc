@@ -41,7 +41,7 @@ Tensor<DType> conv2d(
     for (auto oc : std::views::iota(0, output_channel)) {
       for (auto oy : std::views::iota(0, height)) {
         for (auto ox : std::views::iota(0, width)) {
-          float sum = 0;
+          DType sum = 0;
 
           for (auto ic : std::views::iota(0, input_channel)) {
             for (auto ky : std::views::iota(0, kernel_height)) {
