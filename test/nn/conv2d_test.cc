@@ -30,7 +30,7 @@ TEST(Conv2dTest, Float) {
   auto weight = Tensor<DType>::random(weight_shape);
   auto bias = Tensor<DType>::random(bias_shape);
 
-  auto y = conv2d(x, weight, bias);
+  auto y = conv2d(x, weight, Conv2dOption<DType>().bias(bias));
 
   auto golden_x = testing::to_torch_tensor(x);
   auto golden_weight = testing::to_torch_tensor(weight);

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <odnn/scalar_type.h>
 #include <odnn/size.h>
-#include <odnn/util.h>
+#include <odnn/typedef.h>
 
 #include <algorithm>
 #include <cstddef>

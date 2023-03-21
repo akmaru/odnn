@@ -12,17 +12,21 @@ namespace odnn {
 namespace nn {
 
 template <typename DType>
-struct Conv2dOption {
+struct BatchNorm2dOption {
   static constexpr std::size_t kDim = 2;
 
+  ODNN_BUILDER_OPTIONAL_FIELD(Tensor<DType>, weight);
   ODNN_BUILDER_OPTIONAL_FIELD(Tensor<DType>, bias);
+  ODNN_BUILDER_FIELD(DType, eps) = 1.0e-5;
 };
 
 template <typename DType>
-Tensor<DType> conv2d(
-    const Tensor<DType>& input, const Tensor<DType>& weight, const Conv2dOption<DType>& option
+Tensor<DType> batchnorm2d(
+    const Tensor<DType>& input,
+    const Tensor<DType>& mean,
+    const Tensor<DType>& var,
+    const BatchNorm2dOption<DType>& option
 );
 
 }  // namespace nn
-
 }  // namespace odnn

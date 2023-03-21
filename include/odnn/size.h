@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glog/logging.h>
-#include <odnn/util.h>
+#include <odnn/typedef.h>
 
 #include <cstdint>
 #include <initializer_list>

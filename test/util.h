@@ -31,7 +31,7 @@ void verify(const Tensor<T>& own, const torch::Tensor& golden) {
 
   const auto index_range = std::ranges::iota_view(0, own.num_of_elements());
   std::ranges::for_each(index_range, [&](auto i) {
-    EXPECT_NEAR(own_data[i], golden_data[i], 10e-2);
+    EXPECT_NEAR(own_data[i], golden_data[i], 1.e-2);
   });
 }
 
