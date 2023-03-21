@@ -51,6 +51,10 @@ public:
     );
   }
 
+  DType& operator[](SizeT index) { return storage()->operator[](index); }
+
+  const DType& operator[](SizeT index) const { return storage()->operator[](index); }
+
   DType& operator[](SizeRef indices) {
     CHECK(inbound(indices));
     const auto fi = flatten_index(indices);
